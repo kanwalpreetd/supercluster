@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - name: Setup k3s
       uses: debianmaster/actions-k3s@master
       with:
@@ -22,7 +22,7 @@ jobs:
         kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.5.1/deploy/static/provider/cloud/deploy.yaml
         kubectl wait --namespace ingress-nginx --for=condition=ready pod --selector=app.kubernetes.io/component=controller --timeout=120s
     - name: Setup .NET SDK 5
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '5.0.x'
     - name: Install dependencies
@@ -37,7 +37,7 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
     - name: Run BootAndSync mission
       run: dotnet run --project src/App/App.fsproj --configuration Release -- mission BootAndSync --image stellar/stellar-core:stable --kubeconfig $KUBECONFIG --namespace default --ingress-class nginx --ingress-internal-domain local --ingress-external-host localhost --uneven-sched
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: destination
         path: destination/
